@@ -1,10 +1,17 @@
 <script>
+  import {getAccessToken} from '../utils/auth'
+
   let user = ''
   let password = ''
   const login =() => {
 
     console.log('Hola '+ user.trim())
     console.log(password.trim())
+
+    if(!getAccessToken()){
+      localStorage.setItem('token_auth',user)
+    }
+
     user = ''
     password = ''
   }
@@ -25,7 +32,7 @@
                     src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
                     alt="logo"
                   />
-                  <h4 class="text-xl font-semibold mt-1 mb-8 pb-1">Bienvenido</h4>
+                  <h4 class="text-xl font-semibold mt-1 mb-8 pb-1 text-gradient">Bienvenido</h4>
                 </div>
                 <form on:submit|preventDefault = {login}>
                   <p class="mb-4">Ingrese sus credenciales de acceso</p>
@@ -63,15 +70,12 @@
             </div>
             <div
               class="lg:w-6/12 flex items-center lg:rounded-r-lg rounded-b-lg lg:rounded-bl-none"
-              style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);"
+              style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)"
             >
               <div class="text-white px-4 py-6 md:p-12 md:mx-6">
                 <h4 class="text-xl font-semibold mb-6">We are more than just a company</h4>
                 <p class="text-sm">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat.
+                  Lorem ipsum dolor sit amet
                 </p>
               </div>
             </div>
