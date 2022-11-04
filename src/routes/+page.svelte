@@ -1,5 +1,6 @@
 <script>
   import api from "../services/api"
+  import { goto } from '$app/navigation'
   import {getAccessToken} from '../utils/auth'
 
   let user = ''
@@ -18,8 +19,7 @@
     try {
       const response = await api.get("/login", formData)
       //console.log(response.results)
-      
-      return response.results
+      goto('/dashboard')
     } catch (error) {
       console.error(error)
     }
