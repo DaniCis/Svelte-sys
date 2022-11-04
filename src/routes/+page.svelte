@@ -1,17 +1,28 @@
 <script>
+  import api from "../services/api"
   import {getAccessToken} from '../utils/auth'
 
   let user = ''
   let password = ''
-  const login =() => {
 
-    console.log('Hola '+ user.trim())
-    console.log(password.trim())
+  const login = async () => {
+
+    const formData = new FormData();
+    formData.append('username',user.trim());
+    formData.append('password',password.trim());
 
     if(!getAccessToken()){
       localStorage.setItem('token_auth',user)
     }
 
+    try {
+      const response = await api.get("/login", formData)
+      //console.log(response.results)
+      
+      return response.results
+    } catch (error) {
+      console.error(error)
+    }
     user = ''
     password = ''
   }
