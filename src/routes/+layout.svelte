@@ -1,5 +1,13 @@
 <script>
     import "../app.css"
-  </script>
+    import { SvelteToast } from '@zerodevx/svelte-toast'
+
+    const options = {
+      pausable:true
+  }
+
+</script>
   
-  <slot />
+
+<SvelteToast {options} />
+<slot />

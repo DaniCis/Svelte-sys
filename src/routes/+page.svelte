@@ -1,32 +1,32 @@
 <script>
   import api from "../services/api"
+  import axios from 'axios'
   import { goto } from '$app/navigation'
-  import {getAccessToken} from '../utils/auth'
+  import { success, failure } from '../utils/toast'
+
 
   let user = ''
   let password = ''
 
   const login = async () => {
 
-    const formData = new FormData();
-    formData.append('username',user.trim());
-    formData.append('password',password.trim());
+    const formData = new FormData()
+    formData.append('username', user.trim())
+    formData.append('password', password.trim())
 
-    if(!getAccessToken()){
-      localStorage.setItem('token_auth',user)
-    }
-
-    try {
-      const response = await api.get("/login", formData)
-      //console.log(response.results)
-      goto('/dashboard')
-    } catch (error) {
-      console.error(error)
-    }
-    user = ''
-    password = ''
+    await axios.get('https://pokeapi.co/api/v2/'
+    ).then(response => {
+      success('Hello world!')
+      if(response != null && response != undefined){
+        localStorage.setItem('token_auth', response.data)
+        user = ''
+        password = ''
+        //goto('/dashboard')
+      }
+    }).catch (e => {
+      failure(e.response.data.detail)
+    })
   }
-
 </script>
 
 <section class="h-full gradient-form bg-gray-200 md:h-screen">

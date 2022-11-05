@@ -19,8 +19,8 @@ const apiRequest = (method, url, request) => {
   })
   .catch(err => {
     return Promise.reject(err)
-  });
-};
+  })
+}
 
 const get = (url, request) => apiRequest("get",url, request)
 const deleteRequest = (url, request) =>  apiRequest("delete", url, request)
