@@ -12,7 +12,7 @@ export const success = m => toast.push(m, {
     }
 })
 
-export const warning = m => toast.push(m, { 
+export const info = m => toast.push(m, { 
     theme: {
         '--toastWidth':'20rem',
         '--toastHeight':'4rem',

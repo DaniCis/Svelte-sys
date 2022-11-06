@@ -1,32 +1,50 @@
 <script>
   import api from "../services/api"
   import axios from 'axios'
+  import * as yup from 'yup'
   import { goto } from '$app/navigation'
-  import { success, failure } from '../utils/toast'
+  import {Form, Message, isInvalid} from 'svelte-yup';
+  import { failure } from '../utils/toast'
 
 
-  let user = ''
-  let password = ''
+  let fields = {user: "", password: ""}
+  let submitted = false
+  let isValid
+  let schema = yup.object().shape({
+    user: yup.string().required().label("Usuario"),
+    password: yup.string().required().label("Contraseña"),
+  })
+
+
+  $: invalid = (name)=>{
+    if(submitted){
+      return isInvalid(schema, name, fields);
+    }
+    return false;
+  }
 
   const login = async () => {
+    submitted = true
+    isValid = schema.isValidSync(fields)
+    if(isValid){
+      const formData = new FormData()
+      formData.append('username', fields.user.trim())
+      formData.append('password', fields.password.trim())
 
-    const formData = new FormData()
-    formData.append('username', user.trim())
-    formData.append('password', password.trim())
-
-    await axios.get('https://pokeapi.co/api/v2/'
-    ).then(response => {
-      success('Hello world!')
-      if(response != null && response != undefined){
-        localStorage.setItem('token_auth', response.data)
-        user = ''
-        password = ''
-        //goto('/dashboard')
-      }
-    }).catch (e => {
-      failure(e.response.data.detail)
-    })
+      await axios.get('https://pokeapi.co/api/v2/'
+      ).then(response => {
+        if(response != null && response != undefined){
+          localStorage.setItem('token_auth', response.data)
+          fields.user = ''
+          fields.password = ''
+          goto('/dashboard')
+        }
+      }).catch (e => {
+        failure("e.response.data.detail")
+      })
+    }
   }
+
 </script>
 
 <section class="h-full gradient-form bg-gray-200 md:h-screen">
@@ -45,14 +63,15 @@
                   />
                   <h4 class="text-xl font-semibold mt-1 mb-8 pb-1 text-gradient">Bienvenido</h4>
                 </div>
-                <form on:submit|preventDefault = {login}>
+                <Form {schema} {fields} submitHandler = {login} {submitted}>  
                   <p class="mb-4">Ingrese sus credenciales de acceso</p>
                   <div class="mb-4">
                     <div class="form-control">
                       <label for='inputUser' class="label">
                         <span class="label-text">Usuario</span>
                       </label>
-                      <input id='inputUser' type="text" placeholder="Usuario" class="input input-bordered w-full" bind:value={user} />
+                      <input id='inputUser' type="text" placeholder="Usuario" class:invalid={invalid("user")} class="input input-bordered w-full" bind:value={fields.user} />
+                      <Message name="user" />
                     </div>  
                   </div>
                   <div class="mb-4">
@@ -61,11 +80,12 @@
                         <span class="label-text">Contraseña</span>
                       </label>
                       <div class="input-group">
-                        <input id='inputPassword' type="password" placeholder="Contraseña" class="input input-bordered w-full" bind:value={password}/>
+                        <input id='inputPassword' type="password" placeholder="Contraseña" class:invalid={invalid("password")} class="input input-bordered w-full" bind:value={fields.password}/>
                         <button class="btn btn-square">
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         </button>
                       </div>
+                      <Message name="password" />
                     </div>
                   </div>
                   <div class="text-center pt-1 mb-12 pb-1">
@@ -76,7 +96,7 @@
                     Iniciar
                     </button>
                   </div>
-                </form>
+                </Form>
               </div>
             </div>
             <div
@@ -96,3 +116,9 @@
     </div>
   </div>
 </section>
+
+<style>
+  .invalid {
+    border-color: red !important;
+  }
+</style>
