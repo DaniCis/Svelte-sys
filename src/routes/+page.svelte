@@ -4,8 +4,8 @@
   import api from "../services/api"
   import axios from 'axios'
   import { goto } from '$app/navigation'
-  import {Form, Message, isInvalid} from 'svelte-yup';
-  import { failure, info, success, warning } from '../utils/toast'
+  import { failure } from '../utils/toast'
+  import { Form, Message, isInvalid } from 'svelte-yup'
 
 
   let fields = {user: "", password: ""}
@@ -27,7 +27,6 @@
   const login = async () => {
     submitted = true
     isValid = schema.isValidSync(fields)
-    warning("e.response.data.detail")
     if(isValid){
       const formData = new FormData()
       formData.append('username', fields.user.trim())
@@ -37,8 +36,6 @@
       ).then(response => {
         if(response != null && response != undefined){
           localStorage.setItem('token_auth', response.data)
-          fields.user = ''
-          fields.password = ''
           goto('/dashboard')
         }
       }).catch (e => {
@@ -140,8 +137,5 @@
 <style>
   .invalid {
     border-color: red !important;
-  }
-  .container{
-    margin-right: 0;
   }
 </style>
