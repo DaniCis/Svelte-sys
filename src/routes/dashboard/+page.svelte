@@ -1,5 +1,6 @@
 <script>
-
+    import Sidebar from "../components/sidebar.svelte" 
+    
 </script>
 
-<h1>dash</h1>
+<Sidebar />

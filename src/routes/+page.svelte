@@ -3,7 +3,7 @@
   import * as yup from 'yup'
   import api from "../services/api"
   import axios from 'axios'
-  import { goto } from '$app/navigation'
+  import { navigate } from "svelte-routing"
   import { failure } from '../utils/toast'
   import { Form, Message, isInvalid } from 'svelte-yup'
 
@@ -36,7 +36,7 @@
       ).then(response => {
         if(response != null && response != undefined){
           localStorage.setItem('token_auth', response.data)
-          goto('/dashboard')
+          navigate("/dashboard", { replace: true })
         }
       }).catch (e => {
         failure("e.response.data.detail")
