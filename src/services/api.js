@@ -1,13 +1,14 @@
 //https://dev.to/lukocastillo/svelte-3-how-to-connect-your-app-with-a-rest-api-axios-2h4e
 import axios from 'axios'
+import { getAccessToken } from '../utils/auth'
 
 const axiosAPI = axios.create({
-  baseURL : "https://pokeapi.co/api/v2/" 
+  baseURL : "http://10.147.17.173:" 
 })
 
 const apiRequest = (method, url, request) => {
   const headers = {
-    authorization: ""
+    Authorization: 'Bearer ' + getAccessToken()
   }
   return axiosAPI({
     method,

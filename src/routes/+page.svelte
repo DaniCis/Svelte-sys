@@ -2,9 +2,8 @@
 
   import * as yup from 'yup'
   import api from "../services/api"
-  import axios from 'axios'
-  import { navigate } from "svelte-routing"
   import { failure } from '../utils/toast'
+  import { goto } from '$app/navigation'
   import { Form, Message, isInvalid } from 'svelte-yup'
 
 
@@ -31,16 +30,17 @@
       const formData = new FormData()
       formData.append('username', fields.user.trim())
       formData.append('password', fields.password.trim())
-
-      await axios.get('https://pokeapi.co/api/v2/'
-      ).then(response => {
+      
+      try{
+      const response = await api.get('https://pokeapi.co/api/v2/')      
         if(response != null && response != undefined){
           localStorage.setItem('token_auth', response.data)
-          navigate("/dashboard", { replace: true })
+          console.log(response)
+          goto('/dashboard')
         }
-      }).catch (e => {
-        failure("e.response.data.detail")
-      })
+      }catch (e){
+        failure("e.response.data.detail" + '. Vuelva a ingresar')
+      }
     }
   }
 
@@ -108,8 +108,7 @@
                   <div class="text-center pt-1 mb-12 pb-1">
                     <button
                       class="btn glass w-full mb-3 mt-6" type="submit" data-mdb-ripple="true" data-mdb-ripple-color="light"
-                      style="background: linear-gradient(to right,#ee7724,#d8363a,#dd3675,#b44593);"
-                    >
+                      style="background: linear-gradient(to right,#ee7724,#d8363a,#dd3675,#b44593);">
                     Iniciar
                     </button>
                   </div>
@@ -118,8 +117,7 @@
             </div>
             <div
               class="lg:w-6/12 flex items-center lg:rounded-r-lg rounded-b-lg lg:rounded-bl-none"
-              style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)"
-            >
+              style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)">
               <div class="text-white px-4 py-6 md:p-12 md:mx-6">
                 <h4 class="text-xl font-semibold mb-6">We are more than just a company</h4>
                 <p class="text-sm">
